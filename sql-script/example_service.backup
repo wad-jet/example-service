@@ -1,0 +1,286 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 9.5.4
+-- Dumped by pg_dump version 9.5.1
+
+-- Started on 2019-06-30 21:27:12
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+DROP DATABASE example_service;
+--
+-- TOC entry 2122 (class 1262 OID 139713)
+-- Name: example_service; Type: DATABASE; Schema: -; Owner: postgres
+--
+
+CREATE DATABASE example_service WITH TEMPLATE = template0 ENCODING = 'UTF8' LC_COLLATE = 'Russian_Russia.1251' LC_CTYPE = 'Russian_Russia.1251';
+
+
+ALTER DATABASE example_service OWNER TO postgres;
+
+\connect example_service
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SET check_function_bodies = false;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- TOC entry 6 (class 2615 OID 2200)
+-- Name: public; Type: SCHEMA; Schema: -; Owner: postgres
+--
+
+CREATE SCHEMA public;
+
+
+ALTER SCHEMA public OWNER TO postgres;
+
+--
+-- TOC entry 2123 (class 0 OID 0)
+-- Dependencies: 6
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: postgres
+--
+
+COMMENT ON SCHEMA public IS 'standard public schema';
+
+
+--
+-- TOC entry 1 (class 3079 OID 12355)
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+--
+
+CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
+
+
+--
+-- TOC entry 2125 (class 0 OID 0)
+-- Dependencies: 1
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+--
+
+COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
+
+
+SET search_path = public, pg_catalog;
+
+--
+-- TOC entry 182 (class 1259 OID 139716)
+-- Name: auto_id_profiles; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE auto_id_profiles
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE auto_id_profiles OWNER TO postgres;
+
+--
+-- TOC entry 181 (class 1259 OID 139714)
+-- Name: auto_id_users; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE auto_id_users
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE auto_id_users OWNER TO postgres;
+
+SET default_tablespace = '';
+
+SET default_with_oids = false;
+
+--
+-- TOC entry 184 (class 1259 OID 139730)
+-- Name: profiles; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE profiles (
+    id integer DEFAULT nextval('auto_id_profiles'::regclass) NOT NULL,
+    user_id integer NOT NULL,
+    provider_name character varying(150) NOT NULL,
+    provider_user_id character varying(150) NOT NULL,
+    provider_user_name character varying(150) NOT NULL
+);
+
+
+ALTER TABLE profiles OWNER TO postgres;
+
+--
+-- TOC entry 183 (class 1259 OID 139718)
+-- Name: users; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE users (
+    id integer DEFAULT nextval('auto_id_users'::regclass) NOT NULL,
+    email character varying(150) NOT NULL,
+    level integer DEFAULT 0 NOT NULL,
+    rating integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE users OWNER TO postgres;
+
+--
+-- TOC entry 2126 (class 0 OID 0)
+-- Dependencies: 182
+-- Name: auto_id_profiles; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('auto_id_profiles', 36, true);
+
+
+--
+-- TOC entry 2127 (class 0 OID 0)
+-- Dependencies: 181
+-- Name: auto_id_users; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('auto_id_users', 26, true);
+
+
+--
+-- TOC entry 2117 (class 0 OID 139730)
+-- Dependencies: 184
+-- Data for Name: profiles; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY profiles (id, user_id, provider_name, provider_user_id, provider_user_name) FROM stdin;
+1	11	GOOGLE	aaa=	Алексей
+2	12	GOOGLE	bbb=	Андрей
+3	13	GOOGLE	ccc=	Петр
+4	14	GOOGLE	ddd=	Герман
+5	15	GOOGLE	eee=	Володя
+8	16	GOOGLE	fff=	Слава
+9	17	GOOGLE	ggg=	Илья
+10	18	GOOGLE	hhh=	Гарри
+11	19	GOOGLE	iii=	Евгений
+12	20	GOOGLE	jjj=	Елена
+13	21	GOOGLE	kkk=	Надя
+22	22	GOOGLE	lll=	Вадим
+23	23	GOOGLE	mmm=	Валерия
+24	24	GOOGLE	nnn=	Дамир
+33	25	GOOGLE	ooo=	Лев
+\.
+
+
+--
+-- TOC entry 2116 (class 0 OID 139718)
+-- Dependencies: 183
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY users (id, email, level, rating) FROM stdin;
+13	petr@gmail	16	0
+14	german@gmail	21	0
+15	volodya@gmail	32	1
+16	slava@gmail	40	1
+17	ilya@gmail	42	1
+19	evgeny@gmail	54	2
+20	elena@gmail	60	2
+21	nadya@gmail	61	2
+22	vadim@gmail	65	3
+23	valerija@gmail	70	3
+24	damir@gmail	74	3
+25	lev@gmail	79	3
+12	andry@gmail	8	0
+11	alex@gmail	2	0
+18	garry@gmail	50	2
+\.
+
+
+--
+-- TOC entry 1996 (class 2606 OID 139735)
+-- Name: pk_profiles_id; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY profiles
+    ADD CONSTRAINT pk_profiles_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1993 (class 2606 OID 139725)
+-- Name: pk_users_id; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY users
+    ADD CONSTRAINT pk_users_id PRIMARY KEY (id);
+
+
+--
+-- TOC entry 1991 (class 1259 OID 139729)
+-- Name: ix_users_level_rating; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX ix_users_level_rating ON users USING btree (rating, level);
+
+
+--
+-- TOC entry 1997 (class 1259 OID 139754)
+-- Name: uix_profiles_provider_name_provider_user_id; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX uix_profiles_provider_name_provider_user_id ON profiles USING btree (provider_name, provider_user_id);
+
+
+--
+-- TOC entry 1998 (class 1259 OID 139753)
+-- Name: uix_profiles_user_id_provider_name; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX uix_profiles_user_id_provider_name ON profiles USING btree (user_id, provider_name);
+
+
+--
+-- TOC entry 1994 (class 1259 OID 139728)
+-- Name: uix_users_email; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX uix_users_email ON users USING btree (email);
+
+
+--
+-- TOC entry 1999 (class 2606 OID 139748)
+-- Name: fk_profiles_users_user_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY profiles
+    ADD CONSTRAINT fk_profiles_users_user_id FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 2124 (class 0 OID 0)
+-- Dependencies: 6
+-- Name: public; Type: ACL; Schema: -; Owner: postgres
+--
+
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+REVOKE ALL ON SCHEMA public FROM postgres;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+-- Completed on 2019-06-30 21:27:13
+
+--
+-- PostgreSQL database dump complete
+--
+
