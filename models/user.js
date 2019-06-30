@@ -50,8 +50,7 @@ exports.findOrCreate = async function(providerProfile) {
   if (typeof providerProfile !== 'object') throw new Error('Invalid providerProfile argument type.');
 
   let result = null;  
-  const normalizedProviderName = providerProfile.provider.toUpperCase();
-  const normalizedEmail = providerProfile.email.toUpperCase();
+  const normalizedProviderName = providerProfile.provider.toUpperCase();  
 
   const query = 
     'SELECT u.id, u.email, u.level, u.rating, p.provider_user_name, p.provider_name, p.provider_user_id, p.id AS provider_id ' +
@@ -59,6 +58,9 @@ exports.findOrCreate = async function(providerProfile) {
   let userRecord = await db.oneOrNone(query, [ normalizedProviderName, providerProfile.id.toString() ]);
 
   if (userRecord === null) {
+    if (util.isNullOrUndefined(providerProfile.emails) || providerProfile.emails.length === 0) 
+      throw new Error(`The profile of user provider ${providerProfile.provider} does not have email.`);
+    const normalizedEmail = providerProfile.emails[0].value.toUpperCase();
     userRecord = await db.tx(function * (t) {
       const newUser = yield t.one('INSERT INTO users(email) VALUES($1) RETURNING id', normalizedEmail);
       yield t.none('INSERT INTO profiles(user_id, provider_name, provider_user_id, provider_user_name) VALUES($1, $2, $3, $4)', 
