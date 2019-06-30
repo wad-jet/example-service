@@ -55,15 +55,15 @@ exports.findOrCreate = async function(providerProfile) {
 
   const query = 
     'SELECT u.id, u.email, u.level, u.rating, p.provider_user_name, p.provider_name, p.provider_user_id, p.id AS provider_id ' +
-    'FROM users u INNER JOIN profiles p ON u.id = p.user_id WHERE (p.provider_name, p.provider_user_id) = ($2, $1)';
-  let userRecord = await db.oneOrNone(query, [ normalizedProviderName, providerProfile.id ]);
+    'FROM users u INNER JOIN profiles p ON u.id = p.user_id WHERE (p.provider_name, p.provider_user_id) = ($1, $2)';
+  let userRecord = await db.oneOrNone(query, [ normalizedProviderName, providerProfile.id.toString() ]);
 
   if (userRecord === null) {
     userRecord = await db.tx(function * (t) {
-      const userId = yield t.one('INSERT INTO users(email) VALUE($1) RETURNING id', normalizedEmail);
-      const profile = yield t.one('INSERT INTO profiles(user_id, provider_name, provider_user_id, provider_user_name) VALUES($1, $2, $3, $4)', 
-        [ userId, normalizedProviderName, profile.id, profile.displayName ]);
-      let user = yield db.one(getUserQuery, [ userId, normalizedProviderName ]);
+      const newUser = yield t.one('INSERT INTO users(email) VALUES($1) RETURNING id', normalizedEmail);
+      yield t.none('INSERT INTO profiles(user_id, provider_name, provider_user_id, provider_user_name) VALUES($1, $2, $3, $4)', 
+        [ newUser.id, normalizedProviderName, providerProfile.id, providerProfile.displayName ]);
+      let user = yield t.one(getUserQuery, [ newUser.id, normalizedProviderName ]);
       return user;
     });
   }
