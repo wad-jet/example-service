@@ -4,6 +4,14 @@ var user = require('../models/user');
 var util = require('util');
 
 function checkAuth(req, res, next) {
+	/**
+	 * This code for test
+	 */
+	if (process.env.NODE_ENV === 'test') {
+		req.user = { id: 11 };
+		return next();
+	}
+	
 	if (util.isNullOrUndefined(req.user)) {
 		res.status(401);
 		return res.send('');
