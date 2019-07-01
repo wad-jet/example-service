@@ -1,0 +1,17 @@
+doctype html
+html
+  head
+    title= title
+    script(type="text/javascript", src="https://code.jquery.com/jquery-3.4.1.min.js")
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    div.container
+      #menu
+        - if (user)
+            #account 
+              span.userName= user.profile.userName 
+              a(href='/logout') Logout
+      block content
+
+    - if (user)
+      script(type="text/javascript", src="javascripts/profile.js")

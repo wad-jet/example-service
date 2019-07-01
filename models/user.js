@@ -118,18 +118,20 @@ exports.ratingDecrement = async function(userId) {
 	return result;
 };
 
-exports.findNearestUser = async function(rating, level) {
+exports.findNearestUser = async function(userId, rating, level) {
+  if (util.isNullOrUndefined(userId)) throw new Error('Argument userId is null or undefined.');
   if (util.isNullOrUndefined(rating)) throw new Error('Argument rating is null or undefined.');
+  if (util.isNullOrUndefined(level)) throw new Error('Argument level is null or undefined.');
   if (+rating < 0) throw new Error('Argument rating out of range.');
   if (+level < 0) throw new Error('Argument level out of range.');
 
   let result = null;
   const query = 
     'SELECT u.id, u.email, u.level, u.rating, p.provider_user_name, p.provider_name, p.provider_user_id, p.id AS provider_id FROM users u INNER JOIN profiles p ON p.user_id = u.id ' + 
-    'WHERE u.id in (SELECT id FROM users GROUP BY id, rating, level ORDER BY ABS(MIN(rating - $1)) ASC, ABS(MIN(level - $2)) ASC LIMIT 1) ' +
+    'WHERE u.id in (SELECT id FROM users WHERE id <> $1 GROUP BY id, rating, level ORDER BY ABS(MIN(rating - $2)) ASC, ABS(MIN(level - $3)) ASC LIMIT 1) ' +
     'LIMIT 1';
 
-  const nearestUser = await db.oneOrNone(query, [ +rating, +level ]);
+  const nearestUser = await db.oneOrNone(query, [ userId, +rating, +level ]);
   if (nearestUser !== null) { result = getUserModel(nearestUser); }
   return result;
 };

@@ -3,6 +3,31 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+.container {
+  max-width: 500px;  
+  margin: 0 auto;
+}
+
 a {
   color: #00B7FF;
+}
+
+span.userName {
+  padding-right: 10px;
+}
+
+.amount-component {
+  padding-top: 10px;
+}
+.amount-value {
+    float: right;
+    padding-right: 10px;
+}
+.amount-btn {
+  float: right;
+  width: 22px;
+  height: 22px;
+}
+.field {
+  float: right;
 }

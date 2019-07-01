@@ -1,0 +1,40 @@
+extends layout
+
+block content
+  h1= title
+  - if (user)
+    p User name: 
+      span.field= user.profile.userName
+    p Email: 
+      span.field= user.email
+    
+    #level.amount-component
+      span Level
+      button.amount-btn(type="button", onclick="levelIncrement(#{user.id})") +
+      button.amount-btn(type="button", onclick="levelDecrement(#{user.id})") -
+      span#level-value.amount-value= user.level
+
+    #rating.amount-component
+      span Rating
+      button.amount-btn(type="button", onclick="ratingIncrement(#{user.id})") +
+      button.amount-btn(type="button", onclick="ratingDecrement(#{user.id})") -
+      span#rating-value.amount-value= user.rating
+
+    #nearest-user
+      h2 Nearest user by rating and level
+      button.find-nearest-btn(type="button", onclick="findNearestUser(+$('#rating-value').text(), +$('#level-value').text())") Search...
+      span.field
+        input#auto-find-nearest(type="checkbox")
+        span auto search
+      #nearest-user-profile(hidden)
+        p User name:
+          span#nearest-user-name.field -
+        p Email: 
+          span#nearest-user-email.field -
+        p Level
+          span#nearest-user-level.field -
+        p Rating
+          span#nearest-user-rating.field -
+
+    
+
