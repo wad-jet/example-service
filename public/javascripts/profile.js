@@ -26,20 +26,20 @@ function setAmount(result) {
     }
 }
 
-function levelIncrement(userId) { 
-    $.ajax({ url: '/users/levelIncrement/' + userId }).done(setAmount);
+function levelIncrement() { 
+    $.ajax({ url: '/users/levelIncrement' }).done(setAmount);
 }
 
-function levelDecrement(userId) { 
-    $.ajax({ url: '/users/levelDecrement/' + userId }).done(setAmount);
+function levelDecrement() { 
+    $.ajax({ url: '/users/levelDecrement' }).done(setAmount);
 }
 
-function ratingIncrement(userId) { 
-    $.ajax({ url: '/users/ratingIncrement/' + userId }).done(setAmount);
+function ratingIncrement() { 
+    $.ajax({ url: '/users/ratingIncrement' }).done(setAmount);
 }
 
-function ratingDecrement(userId) {
-    $.ajax({ url: '/users/ratingDecrement/' + userId }).done(setAmount);
+function ratingDecrement() {
+    $.ajax({ url: '/users/ratingDecrement' }).done(setAmount);
 }
 
 function findNearestUser(rating, level) {

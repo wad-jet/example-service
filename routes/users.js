@@ -1,10 +1,19 @@
 var express = require('express');
 var router = express.Router();
 var user = require('../models/user');
+var util = require('util');
 
-router.get('/levelIncrement/:id', async function(req, res, next) {
+function checkAuth(req, res, next) {
+	if (util.isNullOrUndefined(req.user)) {
+		res.status(401);
+		return res.send('');
+	}
+	next();
+}
+
+router.get('/levelIncrement', checkAuth, async function(req, res, next) {	
 	try {
-		var result = await user.levelIncrement(req.params.id);
+		var result = await user.levelIncrement(req.user.id);
 		res.status(200);
 		res.json({ level: result });
 	} catch (err) {
@@ -12,9 +21,9 @@ router.get('/levelIncrement/:id', async function(req, res, next) {
 	}
 });
 
-router.get('/levelDecrement/:id', async function(req, res, next) {
+router.get('/levelDecrement', checkAuth, async function(req, res, next) {
 	try {
-		var result = await user.levelDecrement(req.params.id);
+		var result = await user.levelDecrement(req.user.id);
 		res.status(200);
 		res.json({ level: result });
 	} catch (err) {
@@ -22,9 +31,9 @@ router.get('/levelDecrement/:id', async function(req, res, next) {
 	}
 });
 
-router.get('/ratingIncrement/:id', async function(req, res, next) {
+router.get('/ratingIncrement', checkAuth, async function(req, res, next) {
   try {
-		var result = await user.ratingIncrement(req.params.id);
+		var result = await user.ratingIncrement(req.user.id);
 		res.status(200);
 		res.json({ rating: result });
 	} catch (err) {
@@ -32,9 +41,9 @@ router.get('/ratingIncrement/:id', async function(req, res, next) {
 	}
 });
 
-router.get('/ratingDecrement/:id', async function(req, res, next) {
+router.get('/ratingDecrement', checkAuth, async function(req, res, next) {
   try {
-		var result = await user.ratingDecrement(req.params.id);
+		var result = await user.ratingDecrement(req.user.id);
 		res.status(200);
 		res.json({ rating: result });
 	} catch (err) {
@@ -42,7 +51,7 @@ router.get('/ratingDecrement/:id', async function(req, res, next) {
 	}
 });
 
-router.get('/findNearestUser/:rating/:level', async function(req, res, next) {
+router.get('/findNearestUser/:rating/:level', checkAuth, async function(req, res, next) {
   try {
 		var result = await user.findNearestUser(req.user.id, req.params.rating, req.params.level);
 		res.status(200);
